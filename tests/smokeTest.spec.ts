@@ -15,16 +15,16 @@ test.describe('Juice Shop Smoke Test', () => {
 
 
     // test.beforeAll('Get Token', async ({ api }) => {
-    test('Get Token', async ({ api }) => {
+    test('Get Token', async ({ api, config }) => {
 
         const tokenResponse = await api
             .path('/rest/user/login')
-            .body({ "email": "admin@juice-sh.op", "password": "admin123" })
+            .body({ "email": config.userEmail, "password": config.userPassword })
             .postRequest(200)
 
         authToken = 'Bearer ' + tokenResponse.authentication.token
         // console.log('Token ', authToken)
-        console.log('authToken generated\n')
+        console.log(`authToken generated\n`)
     })
 
     test('Get/Search for a Product', async ({ api }) => {
@@ -42,11 +42,11 @@ test.describe('Juice Shop Smoke Test', () => {
 
     })
 
-    test('Add a comment to the product', async ({ api }) => {
+    test('Add a comment to the product', async ({ api, config }) => {
         const commentResponse = await api
             .path(`/rest/products/${productId}/reviews`)
             .headers({ Authorization: authToken })
-            .body({ "message": `Seems like ${productDesc}!`, "author": "admin@juice-sh.op" })
+            .body({ "message": `Seems like ${productDesc}!`, "author": config.userEmail })
             .putRequest(201)
 
         expect(commentResponse.status).toEqual('success')
@@ -106,6 +106,5 @@ test.describe('Juice Shop Smoke Test', () => {
         console.log(`Deleted feedbackId: ${feedbackId} \nResponse: `, response)
 
     })
-
 
 })
